@@ -1,2 +1,2 @@
-# puzzle-sketches
-Sketches for the puzzles at Escapediem
+# Puzzle Sketches
+This repository includes all Arduino sketches for the puzzles at Escapediem.
