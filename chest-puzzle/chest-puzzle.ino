@@ -1,18 +1,17 @@
 #include <SoftwareSerial.h>
 
-#define ButtonPin			A1		// connect this pin to the button
+#define ButtonPin			2		// connect this pin to the reed contact
 #define Mp3ModulePin		A2		// connect this pin over 1k Ohm to the RX pin of the MP3 module
 #define Volume				30		// max: 30
 
 SoftwareSerial Mp3Module(255, Mp3ModulePin);
 
 
-
 void setup() {
 	pinMode(ButtonPin, INPUT_PULLUP);
 	Mp3Module.begin(9600);
 	SetVolume(Volume);
-	while (digitalRead(ButtonPin) == HIGH) {}
+	while (digitalRead(ButtonPin) == LOW) {}
 	PlayFile(1);
 }
 
