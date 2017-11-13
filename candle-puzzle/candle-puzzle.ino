@@ -4,12 +4,14 @@
 #define ButtonPin			A1		// connect this pin to the button
 #define Mp3ModulePin		A2		// connect this pin over 1k Ohm to the RX pin of the MP3 module
 #define Volume				30		// max: 30
-#define DelayTime			500		// in ms
+#define DelayTime			500		// total time between switching each relays on, in ms
+#define OffsetTimeRelay		100		// offset time between playing each sound and switching each relay on, in ms
+#define DebounceTime		20		// in ms
 
 SoftwareSerial Mp3Module(255, Mp3ModulePin);
 
 const uint8_t RelayPins[]  = {2, 3, 4, 5, 6, 7, 8, 9};
-bool lastState = LOW;
+uint32_t previousMillis = 0;
 
 
 void setup() {
@@ -24,25 +26,29 @@ void setup() {
 
 
 void loop() {
-	if (digitalRead == LOW) {
-		if (lastState == HIGH) {
+	if (digitalRead(ButtonPin) == LOW) {
+		if (previousMillis == 0) {
+			previousMillis = millis();
+		}
+		else if (previousMillis != 1 && millis() - previousMillis >= DebounceTime) {
 			for (uint8_t i = 0; i < sizeof(RelayPins); i++) {
-				digitalWrite(RelayPins[i], LOW);
 				#if useSameSound
 				PlayFile(1);
 				#else
 				PlayFile(i+1);
 				#endif
-				delay(DelayTime);
+				delay(OffsetTimeRelay);
+				digitalWrite(RelayPins[i], LOW);
+				delay(DelayTime - OffsetTimeRelay);
 			}
-			lastState == LOW;
+			previousMillis = 1;
 		}
 	}
-	else if (lastState == LOW) {
+	else if (previousMillis != 0) {
 		for (uint8_t i = 0; i < sizeof(RelayPins); i++) {
 			digitalWrite(RelayPins[i], HIGH);
 		}
-		lastState == HIGH;
+		previousMillis = 0;
 	}
 }
 

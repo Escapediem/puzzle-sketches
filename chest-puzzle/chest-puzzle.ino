@@ -3,15 +3,26 @@
 #define ButtonPin			2		// connect this pin to the reed contact
 #define Mp3ModulePin		A2		// connect this pin over 1k Ohm to the RX pin of the MP3 module
 #define Volume				30		// max: 30
+#define DebounceTime		20		// in ms
 
 SoftwareSerial Mp3Module(255, Mp3ModulePin);
 
 
 void setup() {
+	uint32_t previousMillis = 0;
 	pinMode(ButtonPin, INPUT_PULLUP);
 	Mp3Module.begin(9600);
 	SetVolume(Volume);
-	while (digitalRead(ButtonPin) == LOW) {}
+	while (previousMillis != 0 && millis() - previousMillis >= DebounceTime) {
+		if (digitalRead(ButtonPin) == LOW) {
+			if (previousMillis == 0) {
+				previousMillis = millis();
+			}
+		}
+		else if (previousMillis != 0) {
+			previousMillis = 0;
+		}
+	}
 	PlayFile(1);
 }
 
