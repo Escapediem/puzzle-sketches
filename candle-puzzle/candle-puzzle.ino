@@ -26,7 +26,7 @@ void setup() {
 
 
 void loop() {
-	if (digitalRead(ButtonPin) == LOW) {
+	if (digitalRead(ButtonPin) == HIGH) {
 		if (previousMillis == 0) {
 			previousMillis = millis();
 		}

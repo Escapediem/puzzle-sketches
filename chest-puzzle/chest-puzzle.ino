@@ -14,7 +14,7 @@ void setup() {
 	Mp3Module.begin(9600);
 	SetVolume(Volume);
 	while (previousMillis != 0 && millis() - previousMillis >= DebounceTime) {
-		if (digitalRead(ButtonPin) == LOW) {
+		if (digitalRead(ButtonPin) == HIGH) {
 			if (previousMillis == 0) {
 				previousMillis = millis();
 			}
