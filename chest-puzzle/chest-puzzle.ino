@@ -13,7 +13,7 @@ void setup() {
 	pinMode(ButtonPin, INPUT_PULLUP);
 	Mp3Module.begin(9600);
 	SetVolume(Volume);
-	while (previousMillis != 0 && millis() - previousMillis >= DebounceTime) {
+	while (previousMillis == 0 || millis() - previousMillis < DebounceTime) {
 		if (digitalRead(ButtonPin) == HIGH) {
 			if (previousMillis == 0) {
 				previousMillis = millis();
